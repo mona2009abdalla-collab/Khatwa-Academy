@@ -31,4 +31,161 @@ function setLang(lang){frame.srcdoc=decodeUtf8(pages[lang]);arBtn.classList.togg
 arBtn.addEventListener('click',()=>setLang('ar'));deBtn.addEventListener('click',()=>setLang('de'));
 let initial='ar';try{initial=localStorage.getItem('khatwa-lang')||'ar'}catch(e){};setLang(initial);
 </script>
+
+
+<!-- KHATWA Academy: approved reviews-section + hamburger-menu add-on only. -->
+<script id="khatwa-ratings-addon">
+(function () {
+  'use strict';
+  var frame = document.getElementById('siteframe');
+  if (!frame) return;
+  var formUrl = 'https://forms.gle/s4g4Mudbg1cwZgAF9';
+
+  function installReviews() {
+    var doc;
+    try { doc = frame.contentDocument; } catch (err) { return; }
+    if (!doc || !doc.head || doc.getElementById('khatwa-ratings')) return;
+    var author = doc.getElementById('author');
+    var nav = doc.getElementById('main-nav');
+    if (!author || !author.parentNode || !nav) return;
+    var german = (doc.documentElement.lang || '').toLowerCase().indexOf('de') === 0;
+
+    var section = doc.createElement('section');
+    section.id = 'khatwa-ratings';
+    section.className = 'section-pad khatwa-ratings-section';
+    section.setAttribute('aria-labelledby', 'khatwa-ratings-heading');
+    var stars = '';
+    for (var i=0; i<5; i++) {
+      stars += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="m12 2.4 3.02 6.12 6.76.98-4.89 4.77 1.15 6.73L12 17.82l-6.04 3.18 1.15-6.73-4.89-4.77 6.76-.98L12 2.4Z"/></svg>';
+    }
+    section.innerHTML = `
+      <div class="container">
+        <div class="khatwa-ratings-panel">
+          <p class="khatwa-ratings-brand" lang="en" dir="ltr">KHATWA ACADEMY</p>
+          <h2 id="khatwa-ratings-heading" lang="ar" dir="rtl"><span aria-hidden="true">⭐</span> آراء طلابنا</h2>
+          <h3 lang="de" dir="ltr">Bewertungen unserer Lernenden</h3>
+          <div class="khatwa-ratings-invite">
+            <div class="khatwa-ratings-stars" aria-hidden="true">${stars}</div>
+            <p class="khatwa-ratings-ar" lang="ar" dir="rtl">شاركنا تجربتك مع أكاديمية خطوة</p>
+            <p class="khatwa-ratings-de" lang="de" dir="ltr">Teile deine Erfahrung mit uns!</p>
+          </div>
+          <a class="khatwa-ratings-button" href="${formUrl}" target="_blank" rel="noopener noreferrer" aria-label="قيّم أكاديمية خطوة | Jetzt bewerten – Formular öffnen" dir="rtl">
+            <span aria-hidden="true" class="khatwa-ratings-button-star">⭐</span>
+            <span lang="ar" dir="rtl">قيّم الأكاديمية</span>
+            <span class="khatwa-ratings-separator" aria-hidden="true">|</span>
+            <span lang="de" dir="ltr">Jetzt bewerten</span>
+          </a>
+        </div>
+      </div>`;
+
+    var style = doc.createElement('style');
+    style.id = 'khatwa-ratings-css';
+    style.textContent = `
+      #khatwa-ratings { background:#FBF7EE; color:#102D55; scroll-margin-top: 122px; }
+      #khatwa-ratings .khatwa-ratings-panel {
+        box-sizing:border-box; max-width:760px; margin:0 auto; padding:33px clamp(16px,3.5vw,35px) 26px;
+        background:#F8F3E8; border-radius:24px; text-align:center;
+        font-family:"Noto Sans Arabic","Noto Sans",Arial,sans-serif;
+      }
+      #khatwa-ratings .khatwa-ratings-brand {
+        margin:0 0 23px; font-size:clamp(16px,2.3vw,21px); line-height:1.5;
+        font-weight:800; color:#B18B3F; letter-spacing:.012em; text-align:center;
+      }
+      #khatwa-ratings h2 {
+        margin:0 auto 25px; font-size:clamp(29px,4.5vw,40px); line-height:1.5;
+        font-weight:800; color:#102D55; text-align:center;
+      }
+      #khatwa-ratings h2 span { white-space:nowrap; }
+      #khatwa-ratings h3 {
+        margin:0 auto 27px; font-size:clamp(23px,3.6vw,35px); line-height:1.45;
+        max-width:650px; font-weight:800; color:#102D55; text-align:center;
+      }
+      #khatwa-ratings .khatwa-ratings-invite {
+        box-sizing:border-box; padding:22px 12px 19px; margin:0 auto 15px;
+        border-radius:21px; background:#fff; text-align:center;
+      }
+      #khatwa-ratings .khatwa-ratings-stars {
+        color:#B99344; display:flex; align-items:center; justify-content:center;
+        flex-wrap:nowrap; gap:8px; direction:ltr; margin:0 auto 12px;
+      }
+      #khatwa-ratings .khatwa-ratings-stars svg { display:block; flex-shrink:0; }
+      #khatwa-ratings .khatwa-ratings-ar {
+        margin:0 auto 9px; color:#102D55; font-size:clamp(16px,2.5vw,20px);
+        line-height:1.8; font-weight:500; text-align:center;
+      }
+      #khatwa-ratings .khatwa-ratings-de {
+        margin:0 auto; color:#777; font-size:clamp(15px,2.2vw,18px);
+        line-height:1.6; font-weight:400; text-align:center;
+      }
+      #khatwa-ratings .khatwa-ratings-button {
+        box-sizing:border-box; display:flex; align-items:center; justify-content:center;
+        gap:7px; width:100%; min-height:70px; padding:13px 12px;
+        border-radius:18px; background:#102D55; color:#fff !important;
+        text-align:center; text-decoration:none !important; font-size:clamp(15px,2.5vw,20px);
+        font-weight:800; line-height:1.5; white-space:normal;
+        border:1px solid #102D55;
+        box-shadow:0 6px 20px rgba(16,45,85,.13);
+      }
+      #khatwa-ratings .khatwa-ratings-button-star { font-size:23px; }
+      #khatwa-ratings .khatwa-ratings-separator { opacity:.85; }
+      #khatwa-ratings .khatwa-ratings-button:hover { background:#173E70; }
+      #khatwa-ratings .khatwa-ratings-button:focus-visible {
+        outline:3px solid #B99344; outline-offset:4px;
+      }
+      #main-nav a.khatwa-ratings-nav { color:#102D55; }
+      #main-nav a.khatwa-ratings-nav:hover,
+      #main-nav a.khatwa-ratings-nav:focus-visible { background:#F8F3E8; }
+      @media (max-width:480px) {
+        #khatwa-ratings .khatwa-ratings-panel { padding:26px 10px 20px; border-radius:20px; }
+        #khatwa-ratings .khatwa-ratings-brand { margin-bottom:18px; }
+        #khatwa-ratings h2 { margin-bottom:19px; }
+        #khatwa-ratings h3 { margin-bottom:21px; }
+        #khatwa-ratings .khatwa-ratings-invite { border-radius:18px; padding:19px 9px 17px; }
+        #khatwa-ratings .khatwa-ratings-button { border-radius:17px; min-height:62px; gap:5px; }
+      }
+      @media (max-width:350px) {
+        #khatwa-ratings .khatwa-ratings-button { flex-wrap:wrap; gap:4px; font-size:14px; }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        #khatwa-ratings .khatwa-ratings-button {
+          animation:khatwa-ratings-gentle-pulse 5.5s ease-in-out infinite;
+          transition:background-color .2s ease, transform .2s ease;
+        }
+        #khatwa-ratings .khatwa-ratings-button:hover { transform:translateY(-2px); }
+        @keyframes khatwa-ratings-gentle-pulse {
+          0%,74%,100% { transform:scale(1); box-shadow:0 6px 20px rgba(16,45,85,.13); }
+          83% { transform:scale(1.012); box-shadow:0 0 0 5px rgba(185,147,68,.18),0 8px 26px rgba(16,45,85,.23); }
+          93% { transform:scale(1); box-shadow:0 0 0 0 rgba(185,147,68,0),0 6px 20px rgba(16,45,85,.13); }
+        }
+      }
+    `;
+    doc.head.appendChild(style);
+    author.parentNode.insertBefore(section, author.nextSibling);
+
+    // The original embedded pages and their handlers are left untouched.
+    // Add only one anchor to the existing hamburger menu, before Contact.
+    var menuLink = doc.createElement('a');
+    menuLink.className = 'khatwa-ratings-nav';
+    menuLink.href = '#khatwa-ratings';
+    menuLink.textContent = german ? '⭐ Bewertungen' : '⭐ آراء الطلاب';
+    // The site's existing capture-phase anchor handler handles scrolling.
+    // Close the menu in capture phase too, so it works even if that handler
+    // stops the event before reaching listeners on the new anchor.
+    doc.addEventListener('click', function (event) {
+      var target = event.target && event.target.closest && event.target.closest('a.khatwa-ratings-nav');
+      if (!target) return;
+      nav.classList.remove('open');
+      var toggle = doc.querySelector('.menu-toggle');
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    }, true);
+    var contactLink = nav.querySelector('a[href="#contact"]');
+    if (contactLink) nav.insertBefore(menuLink,contactLink);
+    else nav.appendChild(menuLink);
+  }
+
+  frame.addEventListener('load', installReviews);
+  if (frame.contentDocument && frame.contentDocument.readyState === 'complete') installReviews();
+})();
+</script>
+
 </body></html>
